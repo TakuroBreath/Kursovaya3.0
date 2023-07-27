@@ -2,16 +2,15 @@ import json
 from datetime import datetime
 
 
-def get_data_from_json(name):
+def get_data_from_json(file):
     """Function to retrieve data from a json file."""
-    with open(name, 'r', encoding="utf-8") as f:
+    with open(file, 'r', encoding="utf-8") as f:
         data = json.load(f)
     return data
 
 
-def sort_by_recency():
+def sort_by_recency(data):
     """Function to sort data by recency."""
-    data = get_data_from_json('operations.json')
     correct_data = []
     for i in data:
         if 'date' in i:
@@ -23,9 +22,8 @@ def sort_by_recency():
     return correct_data
 
 
-def five_recent_operations():
+def five_recent_operations(data):
     """Function to return the 5 most recent operations."""
-    data = sort_by_recency()
     five_recent_data = []
     count = 0
     while len(five_recent_data) < 5:
@@ -73,9 +71,9 @@ def mask_target_card(input_str):
     return f"{card_type_one} {card_type_two} **{card_number[-4]}"
 
 
-def printing():
+def printing(operations):
     """Function to print operations for user."""
-    for operation in five_recent_operations():
+    for operation in operations:
         d = datetime.strptime(operation["date"], '%Y-%m-%dT%H:%M:%S.%f')
         print(f"{d.strftime('%d-%m-%Y')} {operation['description']}")
         for i in operation:
@@ -85,6 +83,3 @@ def printing():
                 except KeyError:
                     continue
         print(operation["operationAmount"]["amount"] + " " + operation["operationAmount"]["currency"]["name"] + "\n")
-
-
-printing()
